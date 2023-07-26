@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Response, status
-from models.user import LoginUser, RegisterUser
+from models.user_model import LoginUser, RegisterUser
 from config.db_helpers import get_users_collection
 from schemas.userSchema import user_serializer
 
@@ -11,7 +11,7 @@ collection = get_users_collection()
 def login_user(loginUser: LoginUser, response: Response):
     db_user = collection.find_one({'email': LoginUser.email.lower()})
     if not db_user:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail='Incorrect Email or Password')
     
     if not db_user['password'] == loginUser.password:

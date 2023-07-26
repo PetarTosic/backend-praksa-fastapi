@@ -8,3 +8,6 @@ def get_workers_collection():
 
 def get_vehicles_collection():
     return db['vehicles']
+
+def get_repairs_collection():
+    return db['repairs']
