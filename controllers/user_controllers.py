@@ -7,7 +7,7 @@ user_router = APIRouter()
 
 collection = get_users_collection()
 
-@user_router.post('/login')
+@user_router.post('/login', tags=["User routes"])
 def login_user(loginUser: LoginUser, response: Response):
     db_user = collection.find_one({'email': LoginUser.email.lower()})
     if not db_user:
@@ -21,7 +21,7 @@ def login_user(loginUser: LoginUser, response: Response):
     return {'status': 'success', 'user': db_user}
 
 
-@user_router.post('/register')
+@user_router.post('/register', tags=["User routes"])
 def create_user(registerUser: RegisterUser, response: Response):
     user = collection.find_one({'email': registerUser.email.lower()})
     if user:

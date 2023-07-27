@@ -36,5 +36,6 @@ def repair_serializer(repair) -> dict:
         "vehicle_id": repair["vehicle_id"]
     }
 
+
 def repairs_serializer(repairs) -> list:
     return [repair_serializer(repair) for repair in repairs]
