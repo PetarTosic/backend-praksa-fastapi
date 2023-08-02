@@ -5,11 +5,11 @@ from schemas.userSchema import user_serializer
 
 user_router = APIRouter()
 
-collection = get_users_collection()
+user_collection = get_users_collection()
 
 @user_router.post('/login', tags=["User routes"])
 def login_user(loginUser: LoginUser, response: Response):
-    db_user = collection.find_one({'email': LoginUser.email.lower()})
+    db_user = user_collection.find_one({'email': loginUser.email.lower()})
     if not db_user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail='Incorrect Email or Password')
@@ -18,15 +18,15 @@ def login_user(loginUser: LoginUser, response: Response):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail='Incorrect Email or Password')
     
-    return {'status': 'success', 'user': db_user}
+    return {'status': 'success', 'user': user_serializer(db_user)}
 
 
 @user_router.post('/register', tags=["User routes"])
 def create_user(registerUser: RegisterUser, response: Response):
-    user = collection.find_one({'email': registerUser.email.lower()})
+    user = user_collection.find_one({'email': registerUser.email.lower()})
     if user:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT,
                             detail='Account already exists')
-    collection.insert_one(dict(registerUser))
-    new_user = user_serializer(collection.find_one({'email': registerUser.email.lower()}))
+    user_collection.insert_one(dict(registerUser))
+    new_user = user_serializer(user_collection.find_one({'email': registerUser.email.lower()}))
     return {"status": "success", 'user': new_user}
